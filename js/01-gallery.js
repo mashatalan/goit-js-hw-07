@@ -27,18 +27,33 @@ galleryList.addEventListener('click', onGalleryItemClick);
 
 function onGalleryItemClick(event) {
   event.preventDefault();
+  document.addEventListener('keydown', onEscKeyDown);
+
+  const target = event.target;
+
+  if (target.nodeName !== 'IMG') {
+    return;
+  }
 
   const imageSrc = event.target.dataset.source;
 
+  if (!imageSrc) {
+    return;
+  }
+
   instance = basicLightbox.create(`
-    <img src='${imageSrc}' width='800' height='600'>
+    <img src='${imageSrc}' width='800' height='600' alt=''>
   `);
+
   instance.show();
+
 }
 
-document.addEventListener('keydown', event => {
-
+function onEscKeyDown(event) {
   if (event.key === 'Escape' && instance !== null) {
     instance.close();
+    document.removeEventListener('keydown', onEscKeyDown);
   }
-});
+}
+
+
